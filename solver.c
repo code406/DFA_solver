@@ -13,7 +13,12 @@ int main(int argc, char **argv) {
 	char **array = NULL;
 	char simbolo;
 
-	f = fopen("dia1.txt", "r");
+	if (argc < 2) {
+		printf("--- HELP ---\nUtiliza \"./programa archivo_de_texto\"\n");
+		return 1;
+	}
+
+	f = fopen(argv[1], "r");
 	if(!f) {
 		printf("\nError con el archivo de texto\n");
 		return 1;
