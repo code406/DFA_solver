@@ -4,9 +4,27 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LAMBDA '!'
+
+/* Cuando llego a estado nuevo, add a la lista de estados actuales sus vecinos lambda */
+void add_lambda_states(int estado_nuevo, int max_table, int **temporal, int *tam_temporal, char ***array) {
+	int j, trans, t;
+	for(j=0; j<max_table; j++) {
+		trans = (int) strlen(array[estado_nuevo][j]); /*num transiciones desde ese estado*/
+		for(t=0; t<trans; t++) {
+			if(array[estado_nuevo][j][t] == LAMBDA) {
+				printf("Salto LAMBDA a:\tq%d\n", j);
+				(*temporal)[(*tam_temporal)] = j; /*METO EN EL ARRAY TEMPORAL EL ESTADO J*/
+				(*tam_temporal)++;
+				add_lambda_states(j, max_table, temporal, tam_temporal, array);
+			}
+		}
+	}
+}
+
 int main(int argc, char **argv) {
 	char *laca = NULL;
-	int i, j, t, flag, origen, destino, max_input, max_table, est_final, max_trans, trans, num_e = 1, max_actual, tam_temporal, e;
+	int i, j, t, flag, origen, destino, max_input, max_table, est_final, max_trans, trans, num_e, max_actual, tam_temporal, e;
 	FILE *f = NULL;
 	char *line = NULL;
 	size_t len = 0;
@@ -103,6 +121,12 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	tam_temporal = 1;
+	add_lambda_states(0, max_table, &temporal, &tam_temporal, array);
+	for(e=0; e<tam_temporal; e++) {
+		actual[e] = temporal[e];
+		num_e = tam_temporal;
+	}
 	/* Lectura de simbolos y salto por estados */
 	for(i=0; i<strlen(laca); i++) {
 		printf("__________________\n");
@@ -117,6 +141,7 @@ int main(int argc, char **argv) {
 						printf("Salto a:\tq%d\n", j);
 						temporal[tam_temporal] = j; /*METO EN EL ARRAY TEMPORAL EL ESTADO J*/
 						tam_temporal++;
+						add_lambda_states(j, max_table, &temporal, &tam_temporal, array);
 					}
 				}
 			}

@@ -1,11 +1,13 @@
 // max_input (max cadena entrada terminal), max_table (max estados), est_final, max_trans, max_actual (max estados mismo tiempo)
 40
-5
-2
+7
+4
 10
 10
-0a1
-0b1
-0a3
-1b2
-3c2
+0!1
+1a2
+2a5
+2!3
+3b4
+4a6
+5b6
